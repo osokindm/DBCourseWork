@@ -1,0 +1,23 @@
+<component name="libraryTable">
+  <library name="microsoft.sqlserver.mssql.jdbc11_2_0" type="repository">
+    <properties maven-id="com.microsoft.sqlserver:mssql-jdbc:11.2.0.jre11" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.m2/repository/com/microsoft/sqlserver/mssql-jdbc/11.2.0.jre11/mssql-jdbc-11.2.0.jre11.jar!/" />
+      <root url="jar://$USER_HOME$/.m2/repository/com/microsoft/azure/msal4j/1.13.0/msal4j-1.13.0.jar!/" />
+      <root url="jar://$USER_HOME$/.m2/repository/com/nimbusds/oauth2-oidc-sdk/9.35/oauth2-oidc-sdk-9.35.jar!/" />
+      <root url="jar://$USER_HOME$/.m2/repository/com/github/stephenc/jcip/jcip-annotations/1.0-1/jcip-annotations-1.0-1.jar!/" />
+      <root url="jar://$USER_HOME$/.m2/repository/com/nimbusds/content-type/2.2/content-type-2.2.jar!/" />
+      <root url="jar://$USER_HOME$/.m2/repository/com/nimbusds/lang-tag/1.6/lang-tag-1.6.jar!/" />
+      <root url="jar://$USER_HOME$/.m2/repository/com/nimbusds/nimbus-jose-jwt/9.22/nimbus-jose-jwt-9.22.jar!/" />
+      <root url="jar://$USER_HOME$/.m2/repository/net/minidev/json-smart/2.4.8/json-smart-2.4.8.jar!/" />
+      <root url="jar://$USER_HOME$/.m2/repository/net/minidev/accessors-smart/2.4.8/accessors-smart-2.4.8.jar!/" />
+      <root url="jar://$USER_HOME$/.m2/repository/org/ow2/asm/asm/9.1/asm-9.1.jar!/" />
+      <root url="jar://$USER_HOME$/.m2/repository/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar!/" />
+      <root url="jar://$USER_HOME$/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.13.2.1/jackson-databind-2.13.2.1.jar!/" />
+      <root url="jar://$USER_HOME$/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.13.2/jackson-annotations-2.13.2.jar!/" />
+      <root url="jar://$USER_HOME$/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.13.2/jackson-core-2.13.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
