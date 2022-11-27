@@ -10,24 +10,23 @@ import javax.swing.*;
 public class MainMenuActivity extends JPanel {
     private JButton adminButton;
     private JButton userButton;
-    private JButton agentButton;
+    private JButton receptionistButton;
     private JPanel mainPanel;
 
     public MainMenuActivity() {
-
         initListeners();
         add(mainPanel);
-
     }
 
     private void initListeners() {
         adminButton.addActionListener(e -> onAdmin());
-        agentButton.addActionListener(e -> onAgent());
+        receptionistButton.addActionListener(e -> onReceptionist());
         userButton.addActionListener(e -> onUser());
     }
 
     private void onAdmin() {
         if(Main.frameAdmin != null) {
+            Main.frameAdmin.setVisible(true);
             return;
         }
         Main.frameAdmin = new JFrame("Admin");
@@ -37,8 +36,9 @@ public class MainMenuActivity extends JPanel {
         Main.frameAdmin.setLocationRelativeTo(null);
     }
 
-    private void onAgent() {
-        if(Main.frameUser != null) {
+    private void onReceptionist() {
+        if(Main.frameReceptionist != null) {
+            Main.frameReceptionist.setVisible(true);
             return;
         }
         Main.frameReceptionist = new JFrame("Agent");
@@ -50,6 +50,7 @@ public class MainMenuActivity extends JPanel {
 
     private void onUser() {
         if(Main.frameUser != null) {
+            Main.frameUser.setVisible(true);
             return;
         }
         Main.frameUser = new JFrame("User");

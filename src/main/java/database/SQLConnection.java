@@ -44,4 +44,5 @@ public class SQLConnection {
     public void close() throws SQLException {
         statement.close();
     }
+
 }

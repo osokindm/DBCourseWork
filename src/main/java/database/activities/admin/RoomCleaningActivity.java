@@ -2,22 +2,19 @@ package database.activities.admin;
 
 import database.DataBaseTable;
 import database.Main;
-import database.dialogs.AddReviewDialog;
 
 import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
 import java.util.Arrays;
 
-public class ReviewsActivity extends JPanel {
-
-    private final JButton addReview = new JButton("Добавить отзыв");
-    private final JButton deleteReview = new JButton("Удалить отзыв");
+public class RoomCleaningActivity extends JPanel {
+    private final JButton changeShift = new JButton("Поменять смену");
     private final JButton backButton = new JButton("Назад");
 
     private DataBaseTable dbTable;
 
-    public ReviewsActivity() throws SQLException {
+    public RoomCleaningActivity() throws SQLException {
         setLayout(new BorderLayout());
         initTable();
         initListeners();
@@ -26,10 +23,10 @@ public class ReviewsActivity extends JPanel {
     }
 
     private void initTable() throws SQLException {
-        String[] columnsName = {"id", "classID", "review", "rating",
-                "guestID", "date", "userID"};
+        String[] columnsName = {"id", "userID", "name", "phone",
+                "email", "shift", "hotelID"};
 
-        String result = Main.sqlConnection.selectFunction("Exec viewReviews", columnsName.length);
+        String result = Main.sqlConnection.selectFunction("Exec viewMaid", columnsName.length);
 
         Object[][] res = Arrays.stream(
                 result.split(";")
@@ -42,16 +39,14 @@ public class ReviewsActivity extends JPanel {
     }
 
     private void initListeners() {
-        addReview.addActionListener(e -> onAddReview());
-        deleteReview.addActionListener(e -> onDeleteReview());
+        changeShift.addActionListener(e -> onChangeShift());
         backButton.addActionListener(e -> onBack());
     }
 
     private void initButtonContainerSouth() {
         Container buttonContainer = new Container();
         buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
-        buttonContainer.add(addReview);
-        buttonContainer.add(deleteReview);
+        buttonContainer.add(changeShift);
         add(buttonContainer, BorderLayout.SOUTH);
     }
 
@@ -62,29 +57,17 @@ public class ReviewsActivity extends JPanel {
         add(buttonContainer, BorderLayout.NORTH);
     }
 
-    private void onDeleteReview() {
-//        DeleteReviewDialog deleteReviewDialog = new DeleteReviewDialog(this.dbTable);
-//        deleteReviewDialog.pack();
-//        deleteReviewDialog.setLocationRelativeTo(null);
-//        deleteReviewDialog.setVisible(true);
-        int[] selected = dbTable.getSelected();
-        Arrays.stream(selected).forEach(i -> {
+    private void onChangeShift() {
+        var data = dbTable.getData();
+        data.forEach(i -> {
             try {
-                Main.sqlConnection.insertFunction("Exec deleteReview " +  dbTable.getInfo(i,0));
+                Main.sqlConnection.insertFunction("Exec changeShift "
+                        + i.get(0) + "," + "'"
+                        + i.get(5)+"'");
             } catch (SQLException ignore) {
             }
-            dbTable.removeSelected(i);
         });
-
     }
-
-    private void onAddReview() {
-        AddReviewDialog addReviewDialog = new AddReviewDialog(this.dbTable);
-        addReviewDialog.pack();
-        addReviewDialog.setLocationRelativeTo(null);
-        addReviewDialog.setVisible(true);
-    }
-
 
     private void onBack() {
         Main.frameAdmin.setContentPane(new AdminMenuActivity());

@@ -7,7 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Vector;
 
 public class RoomsActivity extends JPanel {
 
@@ -15,6 +14,7 @@ public class RoomsActivity extends JPanel {
     private final JButton changeCapacity = new JButton("Изменить вместимость");
     private final JButton changeAdditionalInfo = new JButton("Изменить доп. информацию");
     private final JButton alterRoomInfoButton = new JButton("Изменить данные комнаты");
+    private final JButton roomCleaningButton = new JButton("Обслуживание номеров");
     private final JButton backButton = new JButton("Назад");
 
     private DataBaseTable dbTable;
@@ -23,7 +23,8 @@ public class RoomsActivity extends JPanel {
         setLayout(new BorderLayout());
         initTable();
         initListeners();
-        initButtonContainer();
+        initButtonContainerSouth();
+        initButtonContainerNorth();
     }
 
     private void initTable() throws SQLException {
@@ -48,46 +49,83 @@ public class RoomsActivity extends JPanel {
         changeCapacity.addActionListener(e -> onChangeCapacity());
         changeAdditionalInfo.addActionListener(e -> onChangeAdditionalInfo());
         alterRoomInfoButton.addActionListener(e -> onAlterRoomInfo());
-
+        roomCleaningButton.addActionListener(e -> showRoomCleaning());
         backButton.addActionListener(e -> onBack());
     }
 
-    private void initButtonContainer() {
+    private void initButtonContainerSouth() {
         Container buttonContainer = new Container();
         buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
         buttonContainer.add(alterRoomInfoButton);
+        buttonContainer.add(changeBedsNumber);
+        buttonContainer.add(changeCapacity);
+        buttonContainer.add(changeAdditionalInfo);
         buttonContainer.add(backButton);
         add(buttonContainer, BorderLayout.SOUTH);
+    }
+
+    private void initButtonContainerNorth() {
+        Container buttonContainer = new Container();
+        buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
+        buttonContainer.add(backButton);
+        buttonContainer.add(roomCleaningButton);
+        add(buttonContainer, BorderLayout.NORTH);
     }
 
     private void onAlterRoomInfo() {
         //dialog
     }
 
+    private void showRoomCleaning() {
+        try {
+            RoomCleaningActivity roomCleaningActivity = new RoomCleaningActivity();
+            Main.frameAdmin.setContentPane(roomCleaningActivity);
+            Main.frameAdmin.setVisible(true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private void onChangeCapacity() {
-        changeField(0,6, "Exec changeCapacity");
+        changeFieldInt(6, "Exec changeCapacity ");
     }
 
     private void onChangeAdditionalInfo() {
-        changeField(0,8, "Exec changeAdditionalInfo");
+        changeFieldString(8, "Exec changeAdditionalInfo ");
     }
 
     private void onChangeBedsNumber() {
-        changeField(0, 4, "Exec changeBedsNumber");
+        changeFieldInt(4, "Exec changeBedsNumber ");
     }
 
-    private void changeField(int roomNumber, int valueToChange, String command) {
-        Vector<Vector> data = dbTable.getData();
+    private void changeFieldInt(int valueColumn, String command) {
+        final int roomNumberColumn = 0;
+        var data = dbTable.getData();
         data.forEach(i -> {
             try {
-                Main.sqlConnection.insertFunction(command
-                        + i.get(roomNumber) + ","
-                        + i.get(valueToChange));
+                Main.sqlConnection.insertFunction(command + " "
+                        + i.get(roomNumberColumn) + ", "
+                        + i.get(valueColumn));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         });
     }
+
+    private void changeFieldString(int valueColumn, String command) {
+        final int roomNumberColumn = 0;
+        var data = dbTable.getData();
+        data.forEach(i -> {
+            try {
+                Main.sqlConnection.insertFunction(command + " "
+                        + i.get(roomNumberColumn) + ", "
+                        + "'" + i.get(valueColumn) + "'");
+            } catch (SQLException ignore) {
+            }
+        });
+    }
+
     private void onBack() {
         Main.frameAdmin.setContentPane(new AdminMenuActivity());
         Main.frameAdmin.setVisible(true);

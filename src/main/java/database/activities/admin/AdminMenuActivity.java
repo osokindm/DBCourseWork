@@ -9,19 +9,18 @@ import java.sql.SQLException;
 public class AdminMenuActivity extends JPanel {
 
     private final Container container = new Container();
+    private final JButton bookingsButton = new JButton("Бронирования");
     private final JButton roomsButton = new JButton("Номера");
     private final JButton reviewsButton = new JButton("Отзывы");
-    private final JButton roomCleaningButton = new JButton("Обслуживание номеров");
+    private final JButton backButton = new JButton("Назад");
 
     public AdminMenuActivity() {
-
         setLayout(new BorderLayout());
         add(Box.createRigidArea(new Dimension(0, 50)), BorderLayout.NORTH);
         add(Box.createRigidArea(new Dimension(0, 50)), BorderLayout.SOUTH);
 
         initListeners();
         initContainer();
-
     }
 
     private void addButton(JButton button) {
@@ -32,6 +31,13 @@ public class AdminMenuActivity extends JPanel {
     }
 
     private void initListeners() {
+        bookingsButton.addActionListener(e -> {
+            try {
+                showBookings();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        });
         roomsButton.addActionListener(e -> {
             try {
                 showRooms();
@@ -46,14 +52,15 @@ public class AdminMenuActivity extends JPanel {
                 ex.printStackTrace();
             }
         });
+        backButton.addActionListener(e -> onBack());
     }
 
     private void initContainer() {
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-
+        addButton(bookingsButton);
         addButton(roomsButton);
         addButton(reviewsButton);
-
+        addButton(backButton);
         add(container, BorderLayout.CENTER);
     }
 
@@ -64,12 +71,18 @@ public class AdminMenuActivity extends JPanel {
     }
 
     private void showReviews() throws SQLException {
-        RoomsActivity roomsActivity = new RoomsActivity();
-        Main.frameAdmin.setContentPane(roomsActivity);
+        ReviewsActivity reviewsActivity = new ReviewsActivity();
+        Main.frameAdmin.setContentPane(reviewsActivity);
         Main.frameAdmin.setVisible(true);
     }
 
-    private void showRoomCleaning() throws SQLException {
-        // возможно без отдельного активити, а отобразить на room
+    private void showBookings() throws SQLException {
+        BookingActivity bookingActivity = new BookingActivity();
+        Main.frameAdmin.setContentPane(bookingActivity);
+        Main.frameAdmin.setVisible(true);
+    }
+
+    private void onBack() {
+        Main.frameAdmin.setVisible(false);
     }
 }
