@@ -93,16 +93,15 @@ public class AddReviewDialog extends JDialog {
 
 
     private void onAddReview() throws SQLException {
-        //String idRaw = idTextEdit.getText();
-        String classIDRaw = classIDTextEdit.getText();
+        String classID = classIDTextEdit.getText();
         String review = reviewTextEdit.getText();
-        String ratingRaw = ratingTextEdit.getText();
-        String guestIDRaw = guestIDTextEdit.getText();
-        String dateRaw = dateTextEdit.getText();
-        String userIDRaw = userIDTextEdit.getText();
+        String rating = ratingTextEdit.getText();
+        String guestID = guestIDTextEdit.getText();
+        String date = dateTextEdit.getText();
+        String userID = userIDTextEdit.getText();
 
         try {
-            if ((Integer.parseInt(classIDRaw)) > 3 || Integer.parseInt(classIDRaw) < 1) {
+            if ((Integer.parseInt(classID)) > 3 || Integer.parseInt(classID) < 1) {
                 callAlert("Class ID can only be 1/2/3");
             }
         } catch (NumberFormatException e) {
@@ -115,7 +114,7 @@ public class AddReviewDialog extends JDialog {
         }
 
         try {
-            if ((Integer.parseInt(ratingRaw)) > 5 || Integer.parseInt(ratingRaw) < 1) {
+            if ((Integer.parseInt(rating)) > 5 || Integer.parseInt(rating) < 1) {
                 callAlert("Rating can only be 1/2/3/4/5");
             }
         } catch (NumberFormatException e) {
@@ -126,20 +125,20 @@ public class AddReviewDialog extends JDialog {
         try {
             // either guestID or userID should be not null
             // if some ID is null we set "NULL" to this variable
-            if (guestIDRaw == null || guestIDRaw.isEmpty()) {
-                if (userIDRaw == null || userIDRaw.isEmpty()) {
+            if (guestID == null || guestID.isEmpty()) {
+                if (userID == null || userID.isEmpty()) {
                     callAlert("Both user ID and guest ID are empty");
                     return;
                 } else {
-                    Integer.parseInt(userIDRaw);
-                    guestIDRaw = "NULL";
+                    Integer.parseInt(userID);
+                    guestID = "NULL";
                 }
             } else {
-                Integer.parseInt(guestIDRaw);
-                if (userIDRaw == null || userIDRaw.isEmpty()) {
-                    userIDRaw = "NULL";
+                Integer.parseInt(guestID);
+                if (userID == null || userID.isEmpty()) {
+                    userID = "NULL";
                 } else {
-                    Integer.parseInt(userIDRaw);
+                    Integer.parseInt(userID);
                 }
             }
         } catch (NumberFormatException e) {
@@ -150,21 +149,19 @@ public class AddReviewDialog extends JDialog {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         formatter.setLenient(false);
         try {
-            formatter.parse(dateRaw);
-        } catch (IllegalArgumentException e) {
+            formatter.parse(date);
+        } catch (ParseException | IllegalArgumentException e) {
             callAlert("Incorrect date format");
             return;
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
         }
 
         dispose();
         String resultId = Main.sqlConnection.insertFunctionWithResult(
-                "Exec addReview " + classIDRaw + ", "
-                        + "'" + review + "'" + ", " + ratingRaw + ", " + guestIDRaw + ", "
-                        + "'" + dateRaw + "'" + ", " + userIDRaw);
+                "Exec addReview " + classID + ", "
+                        + "'" + review + "'" + ", " + rating + ", " + guestID + ", "
+                        + "'" + date + "'" + ", " + userID);
 
-        String[] newReview = {resultId, classIDRaw, review, ratingRaw, guestIDRaw, dateRaw, userIDRaw};
+        String[] newReview = {resultId, classID, review, rating, guestID, date, userID};
         dbTable.addRow(newReview);
         dispose();
     }
