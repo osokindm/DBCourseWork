@@ -10,7 +10,7 @@ import java.sql.SQLException;
 public class UserMenuActivity extends JPanel {
 
     private final Container container = new Container();
-    private final JButton hotelReviews = new JButton("Отзывы об отеле");
+    private final JButton reviewsButton = new JButton("Отзывы об отеле");
     private final JButton bookNumberButton = new JButton("Забронировать номер");
     private final JButton backButton = new JButton("Назад");
 
@@ -31,7 +31,7 @@ public class UserMenuActivity extends JPanel {
     }
 
     private void initListeners() {
-        hotelReviews.addActionListener(e -> {
+        reviewsButton.addActionListener(e -> {
             try {
                 showReviews();
             } catch (SQLException ex) {
@@ -50,7 +50,7 @@ public class UserMenuActivity extends JPanel {
 
     private void initContainer() {
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-        addButton(hotelReviews);
+        addButton(reviewsButton);
         addButton(bookNumberButton);
         addButton(backButton);
         add(container, BorderLayout.CENTER);
@@ -61,10 +61,6 @@ public class UserMenuActivity extends JPanel {
         bookingDateDialog.pack();
         bookingDateDialog.setLocationRelativeTo(null);
         bookingDateDialog.setVisible(true);
-
-//        BookNumberActivity bookNumberActivity = new BookNumberActivity(dateIn, dateOut);
-//        Main.frameUser.setContentPane(bookNumberActivity);
-//        Main.frameUser.setVisible(true);
     }
 
     private void showReviews() throws SQLException {

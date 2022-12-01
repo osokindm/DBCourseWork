@@ -36,7 +36,6 @@ public class SQLConnection {
     public String insertFunctionWithResult(String command) throws SQLException {
         ResultSet resultSet = this.statement.executeQuery(command);
         System.out.println(resultSet);
-
         resultSet.next();
         return resultSet.getString(1);
     }

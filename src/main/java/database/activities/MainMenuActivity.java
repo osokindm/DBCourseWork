@@ -41,7 +41,7 @@ public class MainMenuActivity extends JPanel {
             Main.frameReceptionist.setVisible(true);
             return;
         }
-        Main.frameReceptionist = new JFrame("Agent");
+        Main.frameReceptionist = new JFrame("Receptionist");
         Main.frameReceptionist.setContentPane(new ReceptionistMenuActivity());
         Main.frameReceptionist.setSize(1000, 1000);
         Main.frameReceptionist.setVisible(true);

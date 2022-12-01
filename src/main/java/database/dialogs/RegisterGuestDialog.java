@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 public class RegisterGuestDialog extends JDialog {
-    private final static int STANDART = 4;
+    private final static int STANDARD = 4;
     private final static int BUSINESS = 9;
     private final static int LUXE = 11;
     private final JTextField userIDTextView = new JTextField("ID пользователя:");
@@ -173,9 +173,9 @@ public class RegisterGuestDialog extends JDialog {
 
     private int getRoomCost(String roomNumber) throws NumberFormatException {
         int number = Integer.parseInt(roomNumber);
-        if (number > 0 && number <= STANDART) {
+        if (number > 0 && number <= STANDARD) {
             return 100;
-        } else if (number > STANDART && number <= BUSINESS) {
+        } else if (number > STANDARD && number <= BUSINESS) {
             return 200;
         } else if (number > BUSINESS && number <= LUXE) {
             return 300;

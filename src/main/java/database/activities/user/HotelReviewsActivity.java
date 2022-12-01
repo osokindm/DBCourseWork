@@ -11,7 +11,6 @@ import java.util.Arrays;
 public class HotelReviewsActivity extends JPanel {
 
     private final JButton backButton = new JButton("Назад");
-    private DataBaseTable dbTable;
 
     public HotelReviewsActivity() throws SQLException {
         setLayout(new BorderLayout());
@@ -31,7 +30,7 @@ public class HotelReviewsActivity extends JPanel {
                 i -> i.split("_")
         ).toArray(Object[][]::new);
 
-        dbTable = new DataBaseTable(res, columnsName);
+        DataBaseTable dbTable = new DataBaseTable(res, columnsName);
         add(dbTable, BorderLayout.CENTER);
     }
 

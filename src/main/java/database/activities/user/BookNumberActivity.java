@@ -2,6 +2,7 @@ package database.activities.user;
 
 import database.DataBaseTable;
 import database.Main;
+import database.activities.receptionist.ReceptionistMenuActivity;
 import database.dialogs.RegisterGuestDialog;
 
 import javax.swing.*;
@@ -11,13 +12,16 @@ import java.util.Arrays;
 
 public class BookNumberActivity extends JPanel {
 
-
     private final JButton bookNumber = new JButton("Забронировать номер");
     private final JButton backButton = new JButton("Назад");
 
     private final String dateIn;
     private final String dateOut;
     private DataBaseTable dbTable;
+    private final User windowIsUsedBy;
+    private enum User {
+        RECEPTIONIST, USER
+    }
 
     public BookNumberActivity(String dateIn, String dateOut) throws SQLException {
         this.dateIn = dateIn;
@@ -27,6 +31,18 @@ public class BookNumberActivity extends JPanel {
         initListeners();
         initButtonContainerSouth();
         initButtonContainerNorth();
+        windowIsUsedBy = User.USER;
+    }
+
+    public BookNumberActivity(String dateIn, String dateOut, String classID) throws SQLException {
+        this.dateIn = dateIn;
+        this.dateOut = dateOut;
+        setLayout(new BorderLayout());
+        initTableWithFilter(dateIn, dateOut, classID);
+        initListeners();
+        initButtonContainerSouth();
+        initButtonContainerNorth();
+        windowIsUsedBy = User.RECEPTIONIST;
     }
 
     private void initTable(String dateIn, String dateOut) throws SQLException {
@@ -35,6 +51,26 @@ public class BookNumberActivity extends JPanel {
 
         String result = Main.sqlConnection.selectFunction(
                 "Exec viewAvailableRooms " + "'" + dateIn + "'" + ", " + "'" + dateOut + "'",
+                columnsName.length
+        );
+
+        Object[][] res = Arrays.stream(
+                result.split(";")
+        ).map(
+                i -> i.split("_")
+        ).toArray(Object[][]::new);
+
+        dbTable = new DataBaseTable(res, columnsName);
+        add(dbTable, BorderLayout.CENTER);
+    }
+
+    private void initTableWithFilter(String dateIn, String dateOut, String classID) throws SQLException {
+        String[] columnsName = {"number", "capacity", "numberOfBeds", "numberOfRooms",
+                "roomArea", "viewFromWindow"};
+
+        String result = Main.sqlConnection.selectFunction(
+                "Exec viewAvailableRoomsWithFilter "
+                        + "'" + dateIn + "'" + ", " + "'" + dateOut + "'" + ", " + classID,
                 columnsName.length
         );
 
@@ -78,8 +114,13 @@ public class BookNumberActivity extends JPanel {
     }
 
     private void onBack() {
-        Main.frameUser.setContentPane(new UserMenuActivity());
-        Main.frameUser.setVisible(true);
+        if (windowIsUsedBy.equals(User.USER)) {
+            Main.frameUser.setContentPane(new UserMenuActivity());
+            Main.frameUser.setVisible(true);
+        } else if (windowIsUsedBy.equals(User.RECEPTIONIST)) {
+            Main.frameReceptionist.setContentPane(new ReceptionistMenuActivity());
+            Main.frameReceptionist.setVisible(true);
+        }
     }
 
 }

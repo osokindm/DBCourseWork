@@ -63,10 +63,6 @@ public class ReviewsActivity extends JPanel {
     }
 
     private void onDeleteReview() {
-//        DeleteReviewDialog deleteReviewDialog = new DeleteReviewDialog(this.dbTable);
-//        deleteReviewDialog.pack();
-//        deleteReviewDialog.setLocationRelativeTo(null);
-//        deleteReviewDialog.setVisible(true);
         int[] selected = dbTable.getSelected();
         Arrays.stream(selected).forEach(i -> {
             try {
