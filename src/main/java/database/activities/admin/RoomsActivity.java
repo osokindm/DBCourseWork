@@ -13,7 +13,6 @@ public class RoomsActivity extends JPanel {
     private final JButton changeBedsNumber = new JButton("Изменить количество спальных мест");
     private final JButton changeCapacity = new JButton("Изменить вместимость");
     private final JButton changeAdditionalInfo = new JButton("Изменить доп. информацию");
-    private final JButton alterRoomInfoButton = new JButton("Изменить данные комнаты");
     private final JButton roomCleaningButton = new JButton("Обслуживание номеров");
     private final JButton backButton = new JButton("Назад");
 
@@ -48,7 +47,6 @@ public class RoomsActivity extends JPanel {
         changeBedsNumber.addActionListener(e -> onChangeBedsNumber());
         changeCapacity.addActionListener(e -> onChangeCapacity());
         changeAdditionalInfo.addActionListener(e -> onChangeAdditionalInfo());
-        alterRoomInfoButton.addActionListener(e -> onAlterRoomInfo());
         roomCleaningButton.addActionListener(e -> showRoomCleaning());
         backButton.addActionListener(e -> onBack());
     }
@@ -56,7 +54,6 @@ public class RoomsActivity extends JPanel {
     private void initButtonContainerSouth() {
         Container buttonContainer = new Container();
         buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
-        buttonContainer.add(alterRoomInfoButton);
         buttonContainer.add(changeBedsNumber);
         buttonContainer.add(changeCapacity);
         buttonContainer.add(changeAdditionalInfo);
@@ -70,10 +67,6 @@ public class RoomsActivity extends JPanel {
         buttonContainer.add(backButton);
         buttonContainer.add(roomCleaningButton);
         add(buttonContainer, BorderLayout.NORTH);
-    }
-
-    private void onAlterRoomInfo() {
-        //dialog
     }
 
     private void showRoomCleaning() {

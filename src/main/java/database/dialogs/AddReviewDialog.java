@@ -101,8 +101,12 @@ public class AddReviewDialog extends JDialog {
         String userID = userIDTextEdit.getText();
 
         try {
-            if ((Integer.parseInt(classID)) > 3 || Integer.parseInt(classID) < 1) {
-                callAlert("Class ID can only be 1/2/3");
+            if (classID != null && !classID.isEmpty()) {
+                if ((Integer.parseInt(classID)) > 3 || Integer.parseInt(classID) < 1) {
+                    callAlert("Class ID can only be 1/2/3");
+                }
+            } else {
+                classID = "NULL";
             }
         } catch (NumberFormatException e) {
             callAlert("Incorrect class ID value");
