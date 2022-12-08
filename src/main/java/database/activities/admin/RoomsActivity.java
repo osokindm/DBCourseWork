@@ -100,8 +100,7 @@ public class RoomsActivity extends JPanel {
                 Main.sqlConnection.insertFunction(command + " "
                         + i.get(roomNumberColumn) + ", "
                         + i.get(valueColumn));
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } catch (SQLException ignore) {
             }
         });
     }

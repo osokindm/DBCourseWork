@@ -4,6 +4,7 @@ import database.DataBaseTable;
 import database.Main;
 import database.activities.receptionist.ReceptionistMenuActivity;
 import database.dialogs.OrderServiceDialog;
+import database.dialogs.RegisterGuestDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +15,7 @@ public class BookingActivity extends JPanel {
 
     private final JButton alterBooking = new JButton("Редактировать бронь");
     private final JButton orderService = new JButton("Заказать услугу");
+    private final JButton addGuests = new JButton("Добавить гостей");
     private final JButton backButton = new JButton("Назад");
 
     private DataBaseTable dbTable;
@@ -77,6 +79,7 @@ public class BookingActivity extends JPanel {
         backButton.addActionListener(e -> onBack());
         if (windowIsUsedBy.equals(User.RECEPTIONIST)) {
             orderService.addActionListener((e -> onOrderService()));
+            addGuests.addActionListener(e -> onAddGuests());
         }
     }
 
@@ -86,6 +89,7 @@ public class BookingActivity extends JPanel {
         buttonContainer.add(alterBooking);
         if (windowIsUsedBy.equals(User.RECEPTIONIST)) {
             buttonContainer.add(orderService);
+            buttonContainer.add(addGuests);
         }
         add(buttonContainer, BorderLayout.SOUTH);
     }
@@ -111,6 +115,17 @@ public class BookingActivity extends JPanel {
             } catch (SQLException ignore) {
             }
         });
+    }
+
+    private void onAddGuests() {
+        int[] selected = dbTable.getSelected();
+        Arrays.stream(selected).forEach(i -> {
+            RegisterGuestDialog registerAndBookDialog = new RegisterGuestDialog(dbTable.getInfo(i, 3));
+            registerAndBookDialog.pack();
+            registerAndBookDialog.setLocationRelativeTo(null);
+            registerAndBookDialog.setVisible(true);
+        });
+
     }
 
     private void onOrderService() {

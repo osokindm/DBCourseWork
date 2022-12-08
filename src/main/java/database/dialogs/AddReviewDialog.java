@@ -2,13 +2,14 @@ package database.dialogs;
 
 import database.DataBaseTable;
 import database.Main;
+import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class AddReviewDialog extends JDialog {
 
@@ -19,13 +20,13 @@ public class AddReviewDialog extends JDialog {
     private final JTextField dateTextView = new JTextField("Дата:");
     private final JTextField userIDTextView = new JTextField("id пользователя:");
 
-
-    private final JTextField classIDTextEdit = new JTextField();
     private final JTextField reviewTextEdit = new JTextField();
-    private final JTextField ratingTextEdit = new JTextField();
+    private final JComboBox<String> ratingBox = new JComboBox<>(new String[]{"1", "2", "3", "4", "5"});
+
     private final JTextField guestIDTextEdit = new JTextField();
-    private final JTextField dateTextEdit = new JTextField();
+    private final JXDatePicker datePicker;
     private final JTextField userIDTextEdit = new JTextField();
+    private final JComboBox<String> classIDBox = new JComboBox<>(new String[]{"1", "2", "3", "NULL"});
 
     private final JButton addReviewButton = new JButton("Добавить отзыв");
 
@@ -33,8 +34,16 @@ public class AddReviewDialog extends JDialog {
 
     public AddReviewDialog(DataBaseTable dbTable) {
         this.dbTable = dbTable;
+        datePicker = initDatePicker();
         initListeners();
         initContainers();
+    }
+
+    private JXDatePicker initDatePicker() {
+        JXDatePicker picker = new JXDatePicker();
+        picker.setDate(Calendar.getInstance().getTime());
+        picker.setFormats(new SimpleDateFormat("yyyy-MM-dd"));
+        return picker;
     }
 
     private void initListeners() {
@@ -51,32 +60,34 @@ public class AddReviewDialog extends JDialog {
         Container mainContainer = new Container();
         mainContainer.setLayout(new BoxLayout(mainContainer, BoxLayout.Y_AXIS));
 
+        Container dateContainer = new Container();
+        initDateField(dateContainer, dateTextView, datePicker);
+        mainContainer.add(dateContainer);
+
         Container classIDContainer = new Container();
-        initTextField(classIDContainer, classIDTextView, classIDTextEdit);
+        initComboBox(classIDContainer, classIDTextView, classIDBox);
         mainContainer.add(classIDContainer);
+
+        Container ratingContainer = new Container();
+        initComboBox(ratingContainer, ratingTextView, ratingBox);
+        mainContainer.add(ratingContainer);
 
         Container reviewContainer = new Container();
         initTextField(reviewContainer, reviewTextView, reviewTextEdit);
         mainContainer.add(reviewContainer);
 
-        Container ratingContainer = new Container();
-        initTextField(ratingContainer, ratingTextView, ratingTextEdit);
-        mainContainer.add(ratingContainer);
-
         Container guestIDContainer = new Container();
         initTextField(guestIDContainer, guestIDTextView, guestIDTextEdit);
         mainContainer.add(guestIDContainer);
-
-        Container dateContainer = new Container();
-        initTextField(dateContainer, dateTextView, dateTextEdit);
-        mainContainer.add(dateContainer);
 
         Container userIDContainer = new Container();
         initTextField(userIDContainer, userIDTextView, userIDTextEdit);
         mainContainer.add(userIDContainer);
 
-        addReviewButton.setMaximumSize(new Dimension(500, 30));
-        mainContainer.add(addReviewButton);
+        Container buttonContainer = new Container();
+        initButton(buttonContainer, addReviewButton);
+        mainContainer.add(buttonContainer);
+
         add(mainContainer);
     }
 
@@ -91,39 +102,47 @@ public class AddReviewDialog extends JDialog {
         container.add(textEdit);
     }
 
+    private void initComboBox(Container container, JTextField textView, JComboBox<String> comboBox) {
+        container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
+        textView.setBorder(new EmptyBorder(0, 0, 0, 0));
+        textView.setEditable(false);
+        textView.setHorizontalAlignment(SwingConstants.RIGHT);
+        textView.setMaximumSize(new Dimension(300, 30));
+        container.add(textView);
+
+        comboBox.setMaximumSize(new Dimension(200, 30));
+        container.add(comboBox);
+    }
+
+    private void initDateField(Container container, JTextField textView, JXDatePicker datePicker) {
+        container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
+        textView.setBorder(new EmptyBorder(0, 0, 0, 0));
+        textView.setEditable(false);
+        textView.setHorizontalAlignment(SwingConstants.RIGHT);
+        textView.setMaximumSize(new Dimension(300, 30));
+        container.add(textView);
+        datePicker.setMaximumSize(new Dimension(1000, 30));
+        container.add(datePicker);
+    }
+
+    private void initButton(Container container, JButton confirmButton) {
+        container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
+        confirmButton.setHorizontalAlignment(SwingConstants.CENTER);
+        confirmButton.setMaximumSize(new Dimension(300, 30));
+        container.add(confirmButton);
+    }
+
 
     private void onAddReview() throws SQLException {
-        String classID = classIDTextEdit.getText();
+        String classID = classIDBox.getSelectedItem().toString();
         String review = reviewTextEdit.getText();
-        String rating = ratingTextEdit.getText();
+        String rating = ratingBox.getSelectedItem().toString();
         String guestID = guestIDTextEdit.getText();
-        String date = dateTextEdit.getText();
         String userID = userIDTextEdit.getText();
-
-        try {
-            if (classID != null && !classID.isEmpty()) {
-                if ((Integer.parseInt(classID)) > 3 || Integer.parseInt(classID) < 1) {
-                    callAlert("Class ID can only be 1/2/3");
-                }
-            } else {
-                classID = "NULL";
-            }
-        } catch (NumberFormatException e) {
-            callAlert("Incorrect class ID value");
-            return;
-        }
+        String date;
 
         if (review == null || review.isEmpty()) {
             callAlert("Empty review");
-        }
-
-        try {
-            if ((Integer.parseInt(rating)) > 5 || Integer.parseInt(rating) < 1) {
-                callAlert("Rating can only be 1/2/3/4/5");
-            }
-        } catch (NumberFormatException e) {
-            callAlert("Incorrect rating value");
-            return;
         }
 
         try {
@@ -152,12 +171,7 @@ public class AddReviewDialog extends JDialog {
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         formatter.setLenient(false);
-        try {
-            formatter.parse(date);
-        } catch (ParseException | IllegalArgumentException e) {
-            callAlert("Incorrect date format");
-            return;
-        }
+        date = formatter.format(datePicker.getDate());
 
         dispose();
         String resultId = Main.sqlConnection.insertFunctionWithResult(

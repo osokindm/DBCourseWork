@@ -24,7 +24,7 @@ public class RoomCleaningActivity extends JPanel {
 
     private void initTable() throws SQLException {
         String[] columnsName = {"id", "userID", "name", "phone",
-                "email", "shift", "hotelID"};
+                "email", "shift"};
 
         String result = Main.sqlConnection.selectFunction("Exec viewMaid", columnsName.length);
 

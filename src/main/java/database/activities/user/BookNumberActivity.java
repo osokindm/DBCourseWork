@@ -3,7 +3,7 @@ package database.activities.user;
 import database.DataBaseTable;
 import database.Main;
 import database.activities.receptionist.ReceptionistMenuActivity;
-import database.dialogs.RegisterGuestDialog;
+import database.dialogs.RegisterAndBookDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -107,10 +107,10 @@ public class BookNumberActivity extends JPanel {
         // 1. choose one number
         // 2. register a guest
         // 3. get booking id
-        RegisterGuestDialog registerGuestDialog = new RegisterGuestDialog(dbTable, dateIn, dateOut);
-        registerGuestDialog.pack();
-        registerGuestDialog.setLocationRelativeTo(null);
-        registerGuestDialog.setVisible(true);
+        RegisterAndBookDialog registerAndBookDialog = new RegisterAndBookDialog(dbTable, dateIn, dateOut);
+        registerAndBookDialog.pack();
+        registerAndBookDialog.setLocationRelativeTo(null);
+        registerAndBookDialog.setVisible(true);
     }
 
     private void onBack() {

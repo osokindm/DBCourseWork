@@ -2,14 +2,15 @@ package database.dialogs;
 
 import database.DataBaseTable;
 import database.Main;
+import org.jdesktop.swingx.JXDatePicker;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 
 public class OrderServiceDialog extends JDialog {
 
@@ -17,17 +18,26 @@ public class OrderServiceDialog extends JDialog {
     private final JTextField isPaidTextView = new JTextField("Услуга оплачена? ");
     private final JTextField dateTextView = new JTextField("Дата ");
 
-    private final JTextField serviceIDTextEdit = new JTextField();
-    private final JTextField isPaidTextEdit = new JTextField("Нет");
-    private final JTextField dateTextEdit = new JTextField();
+
+    private final JComboBox<String> serviceIDBox = new JComboBox<>(new String[]{"1", "2", "3", "4", "5", "6"});
+    private final JComboBox<String> isPaidBox = new JComboBox<>(new String[]{"Да", "Нет"});
+    private final JXDatePicker datePicker;
 
     private final JButton confirmButton = new JButton("Подтвердить");
     private final DataBaseTable dbTable;
 
     public OrderServiceDialog(DataBaseTable dbTable) {
         this.dbTable = dbTable;
+        datePicker = initDatePicker();
         initListeners();
         initContainers();
+    }
+
+    private JXDatePicker initDatePicker() {
+        JXDatePicker picker = new JXDatePicker();
+        picker.setDate(Calendar.getInstance().getTime());
+        picker.setFormats(new SimpleDateFormat("yyyy-MM-dd"));
+        return picker;
     }
 
     private void initListeners() {
@@ -38,52 +48,64 @@ public class OrderServiceDialog extends JDialog {
         Container mainContainer = new Container();
         mainContainer.setLayout(new BoxLayout(mainContainer, BoxLayout.Y_AXIS));
 
+        Container dateContainer = new Container();
+        initDateField(dateContainer, dateTextView, datePicker);
+        mainContainer.add(dateContainer);
+
         Container serviceIDContainer = new Container();
-        initTextField(serviceIDContainer, serviceIDTextView, serviceIDTextEdit);
+        initComboBox(serviceIDContainer, serviceIDTextView, serviceIDBox);
         mainContainer.add(serviceIDContainer);
 
         Container isPaidContainer = new Container();
-        initTextField(isPaidContainer, isPaidTextView, isPaidTextEdit);
+        initComboBox(isPaidContainer, isPaidTextView, isPaidBox);
         mainContainer.add(isPaidContainer);
 
-        Container dateContainer = new Container();
-        initTextField(dateContainer, dateTextView, dateTextEdit);
-        mainContainer.add(dateContainer);
+        Container buttonContainer = new Container();
+        initButton(buttonContainer, confirmButton);
+        mainContainer.add(buttonContainer);
 
-        confirmButton.setMaximumSize(new Dimension(500, 30));
-        mainContainer.add(confirmButton);
         add(mainContainer);
     }
 
-    private void initTextField(Container container, JTextField textView, JTextField textEdit) {
+    private void initComboBox(Container container, JTextField textView, JComboBox<String> comboBox) {
         container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
         textView.setBorder(new EmptyBorder(0, 0, 0, 0));
         textView.setEditable(false);
         textView.setHorizontalAlignment(SwingConstants.RIGHT);
         textView.setMaximumSize(new Dimension(300, 30));
         container.add(textView);
-        textEdit.setMaximumSize(new Dimension(200, 30));
-        container.add(textEdit);
+
+        comboBox.setMaximumSize(new Dimension(200, 30));
+        container.add(comboBox);
+    }
+
+    private void initDateField(Container container, JTextField textView, JXDatePicker datePicker) {
+        container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
+        textView.setBorder(new EmptyBorder(0, 0, 0, 0));
+        textView.setEditable(false);
+        textView.setHorizontalAlignment(SwingConstants.RIGHT);
+        textView.setMaximumSize(new Dimension(300, 30));
+        container.add(textView);
+        datePicker.setMaximumSize(new Dimension(1000, 30));
+        container.add(datePicker);
+    }
+
+    private void initButton(Container container, JButton confirmButton) {
+        container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
+        confirmButton.setHorizontalAlignment(SwingConstants.CENTER);
+        confirmButton.setMaximumSize(new Dimension(300, 30));
+        container.add(confirmButton);
     }
 
     private void onConfirm() {
-        String serviceID = serviceIDTextEdit.getText();
-        String isPaid = isPaidTextEdit.getText().equals("Нет") ? "False" : "True";
-        String date = dateTextEdit.getText();
+        String serviceID = serviceIDBox.getSelectedItem().toString();
+        String isPaid = isPaidBox.getSelectedItem().toString()
+                .equals("Нет") ? "False" : "True";
+        String date;
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         formatter.setLenient(false);
-        try {
-            formatter.parse(date);
-        } catch (ParseException | IllegalArgumentException e) {
-            callAlert("Incorrect date format");
-            return;
-        }
-
-        if (serviceID == null || date == null
-                || serviceID.isEmpty() || date.isEmpty()) {
-            callAlert("Please fill in all the fields");
-        }
+        date = formatter.format(datePicker.getDate());
 
         int[] selected = dbTable.getSelected();
         Arrays.stream(selected).forEach(i -> {
@@ -100,10 +122,4 @@ public class OrderServiceDialog extends JDialog {
         dispose();
     }
 
-    private void callAlert(String errorName) {
-        AlertDialog alert = new AlertDialog(errorName);
-        alert.setLocationRelativeTo(null);
-        alert.pack();
-        alert.setVisible(true);
-    }
 }

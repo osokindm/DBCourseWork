@@ -11,6 +11,7 @@ public class UserMenuActivity extends JPanel {
 
     private final Container container = new Container();
     private final JButton reviewsButton = new JButton("Отзывы об отеле");
+    private final JButton eventsButton = new JButton("Ближайшие мероприятия");
     private final JButton bookNumberButton = new JButton("Забронировать номер");
     private final JButton backButton = new JButton("Назад");
 
@@ -38,6 +39,13 @@ public class UserMenuActivity extends JPanel {
                 ex.printStackTrace();
             }
         });
+        eventsButton.addActionListener(e -> {
+            try {
+                showEvents();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        });
         bookNumberButton.addActionListener(e -> {
             try {
                 bookNumber();
@@ -52,6 +60,7 @@ public class UserMenuActivity extends JPanel {
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
         addButton(reviewsButton);
         addButton(bookNumberButton);
+        addButton(eventsButton);
         addButton(backButton);
         add(container, BorderLayout.CENTER);
     }
@@ -66,6 +75,12 @@ public class UserMenuActivity extends JPanel {
     private void showReviews() throws SQLException {
         HotelReviewsActivity hotelReviewsActivity = new HotelReviewsActivity();
         Main.frameUser.setContentPane(hotelReviewsActivity);
+        Main.frameUser.setVisible(true);
+    }
+
+    private void showEvents() throws SQLException {
+        EventsActivity eventsActivity = new EventsActivity();
+        Main.frameUser.setContentPane(eventsActivity);
         Main.frameUser.setVisible(true);
     }
 
